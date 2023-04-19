@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 import { todoActions } from "../store/todo";
-
+import { RootState } from "../store";
 import "./FormItem.css";
 
 type Todo = {
@@ -11,18 +11,14 @@ type Todo = {
 
 const FormItem = () => {
   const dispatch = useDispatch();
-  const todoPiece = useSelector(
-    (state: { todoList: { todoList: Todo[] } }) => state.todoList
-  );
+  const wholeState = useSelector((state) => state);
+  console.log(wholeState);
+
+  const todoPiece = useSelector((state: RootState) => state.todos.todoList);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [todoList, setTodoList] = useState<Todo[]>([]);
-
-  useEffect(() => {
-    // solution 1
-    console.log(todoPiece);
-  }, [todoPiece]);
 
   const addTodoHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,10 +27,6 @@ const FormItem = () => {
 
     if (newItem) {
       dispatch(todoActions.addTodo(newItem));
-      console.log(todoPiece);
-      //   setTodoList((prev) => {
-      //     return [...prev, { id: Math.random(), title: newItem }];
-      //   });
       inputRef.current!.value = "";
     }
   };
@@ -46,13 +38,13 @@ const FormItem = () => {
         <button>Add Todo</button>
       </form>
       <ul>
-        {/* {todoPiece.map((item) => {
+        {todoPiece.map((item) => {
           return (
             <li className="list" key={item.id}>
               {item.title}
             </li>
           );
-        })} */}
+        })}
       </ul>
     </>
   );
