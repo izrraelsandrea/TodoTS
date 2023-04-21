@@ -2,12 +2,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 import { todoActions } from "../store/todo";
 import { RootState } from "../store";
-import "./FormItem.css";
+import { Todo } from "../../types/types";
 
-type Todo = {
-  id: number;
-  title: string;
-};
+import "./FormItem.css";
 
 const FormItem = () => {
   const dispatch = useDispatch();
@@ -17,8 +14,6 @@ const FormItem = () => {
   const todoPiece = useSelector((state: RootState) => state.todos.todoList);
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const [todoList, setTodoList] = useState<Todo[]>([]);
 
   const addTodoHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,6 +25,9 @@ const FormItem = () => {
       inputRef.current!.value = "";
     }
   };
+  const closeTodoHandler = (id: number) => {
+    dispatch(todoActions.closeTodo(id));
+  };
   return (
     <>
       <form onSubmit={addTodoHandler}>
@@ -40,7 +38,11 @@ const FormItem = () => {
       <ul>
         {todoPiece.map((item) => {
           return (
-            <li className="list" key={item.id}>
+            <li
+              className={item.active ? "list" : "listDone"}
+              key={item.id}
+              onClick={() => closeTodoHandler(item.id)}
+            >
               {item.title}
             </li>
           );

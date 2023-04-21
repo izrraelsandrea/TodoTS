@@ -1,8 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-type Todo = {
-  id: number;
-  title: string;
-};
+import { Todo } from "../../types/types";
+
 const initialTodoState: { todoList: Todo[] } = { todoList: [] };
 
 const todoSlice = createSlice({
@@ -10,7 +8,18 @@ const todoSlice = createSlice({
   initialState: initialTodoState,
   reducers: {
     addTodo(state, action) {
-      state.todoList.push({ id: Math.random(), title: action.payload });
+      state.todoList.push({
+        id: Math.random(),
+        title: action.payload,
+        active: true,
+      });
+    },
+    closeTodo(state, action) {
+      const toogleTodoIndex = state.todoList.findIndex((todo) => {
+        return todo.id === action.payload;
+      });
+      state.todoList[toogleTodoIndex].active =
+        !state.todoList[toogleTodoIndex].active;
     },
   },
 });
